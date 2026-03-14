@@ -69,19 +69,18 @@ body {
     width: 0%;
     background: linear-gradient(90deg, #cd412b, #e85d3a);
     border-radius: 2px;
-    transition: width 0.3s ease;
+    animation: loading 8s ease-in-out infinite;
+}
+@keyframes loading {
+    0% { width: 0%; opacity: 1; }
+    50% { width: 85%; opacity: 1; }
+    80% { width: 95%; opacity: 0.8; }
+    100% { width: 100%; opacity: 0.3; }
 }
 .status {
     font-size: 14px;
     color: #777;
     letter-spacing: 1px;
-}
-.files {
-    font-size: 12px;
-    color: #555;
-    margin-top: 5px;
-    max-height: 20px;
-    overflow: hidden;
 }
 </style>
 </head>
@@ -90,41 +89,24 @@ body {
 <div class="content">
     <img class="hero-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252490/library_hero.jpg" alt="gRust">
     <div class="title">gRust</div>
-    <div class="subtitle">Rust in Garry's Mod</div>
+    <div class="subtitle">Skip the Grind</div>
     <div class="progress-bar-container">
         <div class="progress-bar" id="progressBar"></div>
     </div>
     <div class="status" id="status">Connecting...</div>
-    <div class="files" id="files"></div>
 </div>
 <script>
 function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
-    document.getElementById('status').innerText = 'Connecting to ' + servername + '...';
+    document.getElementById('status').innerText = 'Joining ' + servername + '...';
 }
 function SetStatusChanged(status) {
     document.getElementById('status').innerText = status;
 }
-function SetFilesTotal(total) {
-    window._totalFiles = total;
-}
-function SetFilesNeeded(needed) {
-    if (window._totalFiles && window._totalFiles > 0) {
-        var pct = ((window._totalFiles - needed) / window._totalFiles) * 100;
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('files').innerText = (window._totalFiles - needed) + ' / ' + window._totalFiles + ' files';
-    }
-}
+function SetFilesTotal(total) {}
+function SetFilesNeeded(needed) {}
 function DownloadingFile(filename) {
-    document.getElementById('files').innerText = 'Downloading: ' + filename;
+    document.getElementById('status').innerText = 'Loading: ' + filename.split('/').pop();
 }
-var fakeProgress = 0;
-setInterval(function() {
-    var bar = document.getElementById('progressBar');
-    if (parseFloat(bar.style.width) < 5) {
-        fakeProgress = Math.min(fakeProgress + 0.3, 15);
-        bar.style.width = fakeProgress + '%';
-    }
-}, 500);
 </script>
 </body>
 </html>
