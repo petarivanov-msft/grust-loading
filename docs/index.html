@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>gRust — Loading</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+body {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: url('https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252490/page_bg_generated_v6b.jpg') center center / cover no-repeat;
+    filter: brightness(0.3) blur(3px);
+    z-index: 0;
+}
+.content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 900px;
+    width: 90%;
+}
+.hero-img {
+    width: 100%;
+    max-width: 860px;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    margin-bottom: 30px;
+}
+.title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #cd412b;
+    text-shadow: 0 2px 20px rgba(205,65,43,0.5);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.subtitle {
+    font-size: 18px;
+    color: #999;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+.progress-bar-container {
+    width: 100%;
+    max-width: 500px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    margin: 0 auto 15px;
+    overflow: hidden;
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #cd412b, #e85d3a);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+.status {
+    font-size: 14px;
+    color: #777;
+    letter-spacing: 1px;
+}
+.files {
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+    max-height: 20px;
+    overflow: hidden;
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="content">
+    <img class="hero-img" src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252490/library_hero.jpg" alt="gRust">
+    <div class="title">gRust</div>
+    <div class="subtitle">Rust in Garry's Mod</div>
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="status" id="status">Connecting...</div>
+    <div class="files" id="files"></div>
+</div>
+<script>
+function GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+    document.getElementById('status').innerText = 'Connecting to ' + servername + '...';
+}
+function SetStatusChanged(status) {
+    document.getElementById('status').innerText = status;
+}
+function SetFilesTotal(total) {
+    window._totalFiles = total;
+}
+function SetFilesNeeded(needed) {
+    if (window._totalFiles && window._totalFiles > 0) {
+        var pct = ((window._totalFiles - needed) / window._totalFiles) * 100;
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('files').innerText = (window._totalFiles - needed) + ' / ' + window._totalFiles + ' files';
+    }
+}
+function DownloadingFile(filename) {
+    document.getElementById('files').innerText = 'Downloading: ' + filename;
+}
+var fakeProgress = 0;
+setInterval(function() {
+    var bar = document.getElementById('progressBar');
+    if (parseFloat(bar.style.width) < 5) {
+        fakeProgress = Math.min(fakeProgress + 0.3, 15);
+        bar.style.width = fakeProgress + '%';
+    }
+}, 500);
+</script>
+</body>
+</html>
